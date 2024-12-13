@@ -9,7 +9,7 @@
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title -->
-    <title>The Palatin - Hotel &amp; Resort Template</title>
+    <title>Edriz-ville</title>
 
     <!-- Favicon -->
     <link rel="icon" href="img/core-img/favicon.ico">
@@ -53,13 +53,13 @@
                             <!-- Nav Start -->
                             <div class="classynav">
                                 <ul>
-                                    <li class="active"><a href="index.html">Home</a></li>
+                                    <li><a href="index.html">Home</a></li>
                                     <li><a href="about-us.html">About Us</a></li>
                                     <li><a href="services.html">Services</a></li>
                                     <li><a href="rooms.html">Rooms</a></li>
                                     <li><a href="gallery.html">Gallery</a></li>
 
-                                    <li><a href="contact.html">Contact</a></li>
+                                    <li class="active" ><a href="contact.html">Contact</a></li>
                                         <!-- <ul class="dropdown">
                                             <li><a href="index.html">Home</a></li>
                                             <li><a href="about-us.html">About Us</a></li>
@@ -265,29 +265,74 @@
             <div class="row">
                 <div class="col-12">
                     <!-- Contact Form -->
-                    <form action="#" method="post">
+                    <form id="contactForm">
                         <div class="row">
                             <div class="col-lg-4">
-                                <input type="text" class="form-control" name="text" placeholder="Your Name">
+                                <input type="text" class="form-control" name="name" id="contactName" placeholder="Your Name" required>
                             </div>
                             <div class="col-lg-4">
-                                <input type="email" class="form-control" name="email" placeholder="E-mail">
+                                <input type="email" class="form-control" name="email" id="contactEmail" placeholder="E-mail" required>
                             </div>
                             <div class="col-lg-4">
-                                <input type="text" class="form-control" name="subject" placeholder="Subject">
+                                <input type="text" class="form-control" name="subject" id="contactSubject" placeholder="Subject" required>
                             </div>
                             <div class="col-12">
-                                <textarea name="message" class="form-control" id="message" cols="30" rows="10" placeholder="Message"></textarea>
+                                <textarea name="message" class="form-control" id="contactMessage" cols="30" rows="10" placeholder="Message" required></textarea>
                             </div>
                             <div class="col-12">
                                 <button type="submit" class="btn palatin-btn mt-50">Send Message</button>
                             </div>
                         </div>
                     </form>
+                    <p id="formMessage" style="margin-top: 10px; color: orange; font-size: 14px; display: none;"></p>
                 </div>
             </div>
+            
         </div>
     </section>
+    <script>document.getElementById('contactForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent the default form submission
+    
+        // Get the form data
+        const name = document.getElementById('contactName').value;
+        const email = document.getElementById('contactEmail').value;
+        const subject = document.getElementById('contactSubject').value;
+        const message = document.getElementById('contactMessage').value;
+    
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyH6foigFQ6qbqTUmIFdKD7UqxGi5pgH8EmNKP2-ZwYHhmf_Qq9hfnJ1JyEBcUvRuzl/exec';
+        const formMessage = document.getElementById('formMessage');
+    
+        // Display a loading message
+        formMessage.style.display = 'block';
+        formMessage.textContent = 'Submitting...';
+    
+        // Prepare the data to be sent
+        const formData = new URLSearchParams();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('subject', subject);
+        formData.append('message', message);
+    
+        // Submit the data
+        fetch(scriptURL, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => {
+                if (response.ok) {
+                    formMessage.textContent = 'Your message has been sent successfully!';
+                    // Optionally reset the form
+                    document.getElementById('contactForm').reset();
+                } else {
+                    formMessage.textContent = 'Failed to send your message. Please try again.';
+                }
+            })
+            .catch(error => {
+                console.error('Error!', error);
+                formMessage.textContent = 'An error occurred. Please try again.';
+            });
+    });
+    </script>
     <!-- ##### Contact Form Area End ##### -->
 
     <!-- ##### Google Maps ##### -->
@@ -330,12 +375,46 @@
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="footer-widget-area mt-50">
                         <h6 class="widget-title mb-5">Subscribe to our newsletter</h6>
-                        <form action="#" method="post" class="subscribe-form">
-                            <input type="email" name="subscribe-email" id="subscribeemail" placeholder="Your E-mail">
+                        <form id="subscribeForm" class="subscribe-form">
+                            <input type="email" name="subscribe-email" id="subscribeemail" placeholder="Your E-mail" required>
                             <button type="submit">Subscribe</button>
                         </form>
+                        <!-- Message Display -->
+                        <p id="subscribeMessage" style="margin-top: 10px; color: orange; font-size: 14px; display: none;"></p>
                     </div>
                 </div>
+                
+                
+               <script>document.getElementById('subscribeForm').addEventListener('submit', function (e) {
+                e.preventDefault(); // Prevent default form submission behavior
+            
+                const email = document.getElementById('subscribeemail').value; // Get email input value
+                const messageElement = document.getElementById('subscribeMessage');
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbyH6foigFQ6qbqTUmIFdKD7UqxGi5pgH8EmNKP2-ZwYHhmf_Qq9hfnJ1JyEBcUvRuzl/exec';
+            
+                // Display a loading message
+                messageElement.style.display = 'block';
+                messageElement.textContent = 'Submitting...';
+            
+                // Make a POST request to the Google Apps Script
+                fetch(scriptURL, {
+                    method: 'POST',
+                    body: new URLSearchParams({ 'subscribe-email': email }),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            messageElement.textContent = 'Thank you for subscribing!';
+                        } else {
+                            messageElement.textContent = 'Failed to subscribe. Please try again.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error!', error);
+                        messageElement.textContent = 'An error occurred. Please try again.';
+                    });
+            });
+            </script>
+                
 
                 <!-- Copywrite Text -->
                 <div class="col-12">

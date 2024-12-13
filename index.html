@@ -491,12 +491,47 @@
                 <div class="col-12 col-md-6 col-lg-3">
                     <div class="footer-widget-area mt-50">
                         <h6 class="widget-title mb-5">Subscribe to our newsletter</h6>
-                        <form action="#" method="post" class="subscribe-form">
-                            <input type="email" name="subscribe-email" id="subscribeemail" placeholder="Your E-mail">
+                        <form id="subscribeForm" class="subscribe-form">
+                            <input type="email" name="subscribe-email" id="subscribeemail" placeholder="Your E-mail" required>
                             <button type="submit">Subscribe</button>
                         </form>
+                        <!-- Message Display -->
+                        <p id="subscribeMessage" style="margin-top: 10px; color: orange; font-size: 14px; display: none;"></p>
                     </div>
                 </div>
+                
+                
+               <script>document.getElementById('subscribeForm').addEventListener('submit', function (e) {
+                e.preventDefault(); // Prevent default form submission behavior
+            
+                const email = document.getElementById('subscribeemail').value; // Get email input value
+                const messageElement = document.getElementById('subscribeMessage');
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbyH6foigFQ6qbqTUmIFdKD7UqxGi5pgH8EmNKP2-ZwYHhmf_Qq9hfnJ1JyEBcUvRuzl/exec';
+            
+                // Display a loading message
+                messageElement.style.display = 'block';
+                messageElement.textContent = 'Submitting...';
+            
+                // Make a POST request to the Google Apps Script
+                fetch(scriptURL, {
+                    method: 'POST',
+                    body: new URLSearchParams({ 'subscribe-email': email }),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            messageElement.textContent = 'Thank you for subscribing!';
+                        } else {
+                            messageElement.textContent = 'Failed to subscribe. Please try again.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error!', error);
+                        messageElement.textContent = 'An error occurred. Please try again.';
+                    });
+            });
+            </script>
+                
+                
 
                 <!-- Copywrite Text -->
                 <div class="col-12">
